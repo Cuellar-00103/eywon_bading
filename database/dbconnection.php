@@ -13,7 +13,9 @@ class Database
         if ($_SERVER['SERVER_NAME'] === 'localhost' || $_SERVER['SERVER_ADDR'] === '127.0.0.1')
         {
             $this->host = "localhost";
-            $this->db_name = "itelec2";
+
+            
+            $this->db_name = "avocare_db";
             $this->username = "root";
             $this->password = "";
         }

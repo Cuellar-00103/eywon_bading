@@ -36,8 +36,8 @@ class ADMIN
             exit;
         }
         else
-        {
-            $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email");
+        {   # FROM user -> users_tbl
+            $stmt = $this->runQuery("SELECT * FROM users_tbl WHERE email = :email");
             $stmt->execute(array(":email" => $email));
             $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -142,7 +142,7 @@ class ADMIN
 
     public function addAdmin($csrf_token, $username, $email, $password)
     {
-        $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email");
+        $stmt = $this->runQuery("SELECT * FROM users_tbl WHERE email = :email");
         $stmt->execute(array(":email" => $email));
 
         if($stmt->rowCount() > 0)
@@ -161,7 +161,7 @@ class ADMIN
 
         $hash_password = md5($password);
 
-        $stmt = $this->runQuery("INSERT INTO user (username, email, password) VALUES (:username, :email, :password)");
+        $stmt = $this->runQuery("INSERT INTO users_tbl (username, email, password) VALUES (:username, :email, :password)");
         $exec = $stmt->execute(array(
             ":username" => $username, 
             ":email" => $email,
@@ -189,8 +189,8 @@ class ADMIN
             }
 
             unset($_SESSION['csrf_token']);
-
-            $stmt = $this->runQuery("SELECT * FROM user WHERE email = :email AND status = :status");
+            # YUNG FROM "user" GINAWA KONG "users_tbl"
+            $stmt = $this->runQuery("SELECT * FROM users_tbl WHERE email = :email AND status = :status");
             $stmt->execute(array(":email" => $email, ":status" => 'active'));
             $userRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -200,14 +200,14 @@ class ADMIN
                     if ($userRow['password'] == md5($password))
                     {
                         $activity = "Has Successfully signed in";
-                        $user_id = $userRow['id'];
+                        $user_id = $userRow['user_id'];
                         $this->logs($activity, $user_id);
                         $_SESSION['adminSession'] = $user_id;
                         echo "<script>alert('welcome'); window.location.href = '../';</script>";
                         exit;
                     }
                     else
-                    {
+                    {   
                         echo "<script>alert('Password is incorrect'); window.location.href = '../../../';</script>";
                         exit;
                     }

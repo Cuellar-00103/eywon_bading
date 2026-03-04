@@ -6,9 +6,18 @@ if(!$admin->isUserLoggedIn()) {
     $admin->redirect('../../');
 }
 
-$stmt = $admin->runQuery("SELECT * FROM user WHERE id = :id");
+$stmt = $admin->runQuery("SELECT * FROM users_tbl WHERE user_id = :id");
 $stmt->execute(array(":id" => $_SESSION['adminSession']));
 $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+$roleMap = [
+    'admin' => 'Admin',
+    'vet' => 'Veterinarian',
+    'seller' => 'Seller',
+    'user' => 'Shopper'
+];
+/* === dinagdag ko yung dynamic roleTitle variable === */
+$roleTitle = $roleMap[$user_data['role']] ?? 'Shopper';
 
 //echo $_SESSION['csrf_token']; // Check the token value
 ?>
@@ -17,6 +26,9 @@ $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- === ginawang dynamic ang page title based sa role === -->
+    <!-- === <title><?php echo $roleTitle; ?> Dashboard</title> === -->
     <title>Admin Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +38,8 @@ $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Welcome Shoppers!</a>
+            <!-- === ginawang dynamic ang navbar greeting === -->
+            <a class="navbar-brand" href="#">Welcome <?php echo $roleTitle; ?> !</a>
             <div class="d-flex">
                 <span class="navbar-text me-3 text-white">
                     Welcome, <?php echo htmlspecialchars($user_data['username']); ?>

@@ -26,19 +26,17 @@ class SystemConfig
     private $smtp_email;
     private $smtp_password;
 
+
+
     public function __construct()
     {
         $database = new Database();
         $db = $database->dbConnection();
         $this->conn = $db;
 
-        // get email configuration
-        $stmt = $this->runQuery("SELECT * FROM email_config");
-        $stmt->execute();
-        $email_config = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->smtp_email = $email_config['email'];
-        $this->smtp_password = $email_config['password'];
+        #SMTP email & password
+        $this->smtp_email = "jourdel0909@gmail.com";
+        $this->smtp_password = "ktlt tszk fyaw zlia";
     }
 
     public function getSmtpEmail()
